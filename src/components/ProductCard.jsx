@@ -21,10 +21,16 @@ const ProductCard = ({ product }) => {
         <p className="text-sm text-gray-600 mb-2 line-clamp-2">
           {product.description}
         </p>
-        <div className="mt-2 text-center w-full">
+        <div className=" flex justify-between  items-center mt-2 text-center w-full">
           <span className="text-green-600 font-bold text-lg">
             ${product.price}
           </span>
+          <button
+            className="border-0 bg-blue-600 p-2 m-2 rounded text-white hover:bg-blue-700 cursor-pointer"
+            onClick={handleCartClick}
+          >
+            Add To Cart
+          </button>
         </div>
       </div>
     </Link>
