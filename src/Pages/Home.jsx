@@ -70,50 +70,51 @@ const Home = () => {
       </div>
 
       {currentProducts.length > 0 ? (
-        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 mb-8">
-          {currentProducts.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
-        </div>
+        <>
+          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 mb-8">
+            {currentProducts.map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
+          <div className="flex justify-center items-center gap-2 flex-wrap sm:items-left">
+            <button
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              className="bg-gray-300 px-3 py-1 rounded disabled:opacity-50 cursor-pointer"
+            >
+              Prev
+            </button>
+
+            {pagesToShow.map((page) => (
+              <button
+                key={page}
+                onClick={() => setCurrentPage(page)}
+                className={`px-3 py-1 rounded border ${
+                  currentPage === page
+                    ? "bg-blue-600 text-white"
+                    : "bg-white cursor-pointer"
+                }`}
+              >
+                {page}
+              </button>
+            ))}
+
+            <button
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+              disabled={currentPage === totalPages}
+              className="bg-gray-300 px-3 py-1 rounded disabled:opacity-50 cursor-pointer"
+            >
+              Next
+            </button>
+          </div>
+        </>
       ) : (
         <h1 className="text-center text-2xl mt-8 text-gray-500">
           No products found
         </h1>
       )}
-
-      <div className="flex justify-center items-center gap-2 flex-wrap sm:items-left">
-        <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-          className="bg-gray-300 px-3 py-1 rounded disabled:opacity-50 cursor-pointer"
-        >
-          Prev
-        </button>
-
-        {pagesToShow.map((page) => (
-          <button
-            key={page}
-            onClick={() => setCurrentPage(page)}
-            className={`px-3 py-1 rounded border ${
-              currentPage === page
-                ? "bg-blue-600 text-white"
-                : "bg-white cursor-pointer"
-            }`}
-          >
-            {page}
-          </button>
-        ))}
-
-        <button
-          onClick={() =>
-            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-          }
-          disabled={currentPage === totalPages}
-          className="bg-gray-300 px-3 py-1 rounded disabled:opacity-50 cursor-pointer"
-        >
-          Next
-        </button>
-      </div>
     </div>
   );
 };
