@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { CartContext } from "../components/CartContext"; 
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
+  const { addToCart } = useContext(CartContext);
 
   const handleCartClick = (e) => {
-    e.preventDefault(); // Prevent the <Link> navigation
-    navigate("/cart"); // Navigate to cart page
+    e.preventDefault();
+    addToCart(product);
+    navigate("/cart");
   };
 
   return (
