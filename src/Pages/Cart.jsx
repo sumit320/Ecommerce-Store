@@ -10,7 +10,7 @@ const Cart = () => {
   if (cart.length === 0) {
     return (
       <div className="p-6 mt-12 text-center sm:mt-20">
-        <FaShoppingCart className="mx-auto text-5xl text-gray-400 mb-4" />
+        <FaShoppingCart className="mx-auto text-5xl text-gray-600 mb-4" />
         <h2 className="text-xl sm:text-2xl font-semibold mb-2">
           Your cart is empty
         </h2>
