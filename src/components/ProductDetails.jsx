@@ -4,7 +4,7 @@ import { CartContext } from "../components/CartContext";
 
 const ProductDetails = () => {
   const { id } = useParams();
-  const navigate = useNavigate(); // 👈 initialize navigate
+  const navigate = useNavigate(); 
   const { addToCart } = useContext(CartContext);
 
   const [product, setProduct] = useState(null);
