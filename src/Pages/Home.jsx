@@ -56,7 +56,7 @@ const Home = () => {
   }
 
   return (
-    <div className="px-4 sm:px-8 md:px-16 lg:px-24 py-8">
+    <div className="px-4 sm:px-8 md:px-16 lg:px-24 py-8 ">
       <h1 className="text-3xl sm:text-4xl font-bold mb-8 text-left mt-20">
         All Products
       </h1>
@@ -105,7 +105,7 @@ const Home = () => {
             setSearchTerm("");
             setCurrentPage(1);
           }}
-          className="px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600 transition"
+          className="px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600 transition cursor-pointer"
         >
           Clear Filters
         </button>
@@ -123,7 +123,7 @@ const Home = () => {
             <button
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
-              className="px-3 py-1 rounded bg-gray-200 text-gray-800 hover:bg-gray-300 disabled:opacity-50 transition"
+              className="px-3 py-1 rounded bg-gray-200 text-gray-800 hover:bg-gray-300 disabled:opacity-50 transition cursor-pointer"
             >
               Prev
             </button>
@@ -135,7 +135,7 @@ const Home = () => {
                 className={`px-3 py-1 rounded border transition ${
                   currentPage === page
                     ? "bg-blue-600 text-white border-blue-600"
-                    : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"
+                    : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100 cursor-pointer"
                 }`}
               >
                 {page}
@@ -147,7 +147,7 @@ const Home = () => {
                 setCurrentPage((prev) => Math.min(prev + 1, totalPages))
               }
               disabled={currentPage === totalPages}
-              className="px-3 py-1 rounded bg-gray-200 text-gray-800 hover:bg-gray-300 disabled:opacity-50 transition"
+              className="px-3 py-1 rounded bg-gray-200 text-gray-800 hover:bg-gray-300 disabled:opacity-50 transition cursor-pointer"
             >
               Next
             </button>
