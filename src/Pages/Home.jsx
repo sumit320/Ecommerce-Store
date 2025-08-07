@@ -7,6 +7,7 @@ const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const productsPerPage = 12;
 
   useEffect(() => {
@@ -27,10 +28,15 @@ const Home = () => {
     fetchData();
   }, []);
 
-  const filteredProducts = products.filter((product) =>
-    product.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
+  const categories = ["all", ...new Set(products.map((p) => p.category))];
+  const filteredProducts = products.filter((product) => {
+    const matchCategory =
+      selectedCategory === "all" || product.category === selectedCategory;
+    const matchSearch = product.title
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    return matchCategory && matchSearch;
+  });
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
   const indexOfLast = currentPage * productsPerPage;
   const indexOfFirst = indexOfLast - productsPerPage;
@@ -50,10 +56,29 @@ const Home = () => {
   }
 
   return (
-    <div className="p-6">
-      <h1 className="text-3xl font-bold mb-6 text-left mt-24">All Products</h1>
+    <div className="px-4 sm:px-8 md:px-16 lg:px-24 py-8">
+      <h1 className="text-3xl sm:text-4xl font-bold mb-8 text-left mt-20">
+        All Products
+      </h1>
 
-      <div className="flex items-center justify-center my-6 px-4">
+      <div className="flex flex-col sm:flex-row items-center  gap-6 mb-6">
+        <div className="w-full sm:w-auto">
+          <select
+            value={selectedCategory}
+            onChange={(e) => {
+              setSelectedCategory(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="w-full sm:w-auto border border-gray-300 bg-white rounded-md px-4 py-2 text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+          >
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat.charAt(0).toUpperCase() + cat.slice(1)}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <div className="relative w-full max-w-md">
           <input
             type="text"
@@ -69,18 +94,36 @@ const Home = () => {
         </div>
       </div>
 
+      <div className="text-sm text-left mb-6 text-gray-600 flex flex-wrap items-center gap-4">
+        <div>
+          Showing: <strong>{selectedCategory}</strong> | Search:{" "}
+          <strong>{searchTerm || "none"}</strong>
+        </div>
+        <button
+          onClick={() => {
+            setSelectedCategory("all");
+            setSearchTerm("");
+            setCurrentPage(1);
+          }}
+          className="px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600 transition"
+        >
+          Clear Filters
+        </button>
+      </div>
+
       {currentProducts.length > 0 ? (
         <>
-          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 mb-8">
+          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mb-10">
             {currentProducts.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}
           </div>
-          <div className="flex justify-center items-center gap-2 flex-wrap sm:items-left">
+
+          <div className="flex justify-center items-center gap-2 flex-wrap">
             <button
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
-              className="bg-gray-300 px-3 py-1 rounded disabled:opacity-50 cursor-pointer"
+              className="px-3 py-1 rounded bg-gray-200 text-gray-800 hover:bg-gray-300 disabled:opacity-50 transition"
             >
               Prev
             </button>
@@ -89,10 +132,10 @@ const Home = () => {
               <button
                 key={page}
                 onClick={() => setCurrentPage(page)}
-                className={`px-3 py-1 rounded border ${
+                className={`px-3 py-1 rounded border transition ${
                   currentPage === page
-                    ? "bg-blue-600 text-white"
-                    : "bg-white cursor-pointer"
+                    ? "bg-blue-600 text-white border-blue-600"
+                    : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"
                 }`}
               >
                 {page}
@@ -104,7 +147,7 @@ const Home = () => {
                 setCurrentPage((prev) => Math.min(prev + 1, totalPages))
               }
               disabled={currentPage === totalPages}
-              className="bg-gray-300 px-3 py-1 rounded disabled:opacity-50 cursor-pointer"
+              className="px-3 py-1 rounded bg-gray-200 text-gray-800 hover:bg-gray-300 disabled:opacity-50 transition"
             >
               Next
             </button>
