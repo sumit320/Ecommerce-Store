@@ -1,0 +1,34 @@
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+
+const ProductCard = ({ product }) => {
+  const navigate = useNavigate();
+
+  const handleCartClick = (e) => {
+    e.preventDefault(); // Prevent the <Link> navigation
+    navigate("/cart"); // Navigate to cart page
+  };
+
+  return (
+    <Link to={`/product/${product.id}`} className="w-full">
+      <div className="border rounded-xl shadow-2xl border-none p-4 flex flex-col items-center hover:scale-105 transition transform delay-100 ease-in cursor-pointer">
+        <img
+          src={product.thumbnail}
+          alt={product.title}
+          className="h-48 w-42 object-cover mb-4 rounded"
+        />
+        <h2 className="text-lg font-semibold">{product.title}</h2>
+        <p className="text-sm text-gray-600 mb-2 line-clamp-2">
+          {product.description}
+        </p>
+        <div className="mt-2 text-center w-full">
+          <span className="text-green-600 font-bold text-lg">
+            ${product.price}
+          </span>
+        </div>
+      </div>
+    </Link>
+  );
+};
+
+export default ProductCard;
