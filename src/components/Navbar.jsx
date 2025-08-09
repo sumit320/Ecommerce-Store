@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { FaShoppingCart, FaSearch } from "react-icons/fa";
+import { FaShoppingCart } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { CartContext } from "./CartContext";
 

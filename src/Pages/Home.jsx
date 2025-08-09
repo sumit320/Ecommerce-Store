@@ -8,8 +8,10 @@ const Home = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const productsPerPage = 12;
-
+  const [lowestPrice, setLowestPrice] = useState(0);
+  const [highestPrice, setHighestPrice] = useState(0);
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(0);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -28,6 +30,17 @@ const Home = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (products.length > 0) {
+      const low = Math.min(...products.map((p) => p.price));
+      const high = Math.max(...products.map((p) => p.price));
+      setLowestPrice(low);
+      setHighestPrice(high);
+      setMinPrice(low);
+      setMaxPrice(high);
+    }
+  }, [products]);
+
   const categories = ["all", ...new Set(products.map((p) => p.category))];
   const filteredProducts = products.filter((product) => {
     const matchCategory =
@@ -35,14 +48,17 @@ const Home = () => {
     const matchSearch = product.title
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
-    return matchCategory && matchSearch;
+    const matchPrice = product.price >= minPrice && product.price <= maxPrice;
+
+    return matchCategory && matchSearch && matchPrice;
   });
+  const productsPerPage = 12;
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
   const indexOfLast = currentPage * productsPerPage;
   const indexOfFirst = indexOfLast - productsPerPage;
   const currentProducts = filteredProducts.slice(indexOfFirst, indexOfLast);
 
-  const groupSize = 5;
+  const groupSize = 6;
   const currentGroup = Math.floor((currentPage - 1) / groupSize);
   const groupStart = currentGroup * groupSize + 1;
   const groupEnd = Math.min(groupStart + groupSize - 1, totalPages);
@@ -57,7 +73,7 @@ const Home = () => {
 
   return (
     <div className="px-4 sm:px-8 md:px-16 lg:px-24 py-8 ">
-      <h1 className="text-3xl sm:text-4xl font-bold mb-8 text-left mt-20">
+      <h1 className="text-3xl sm:text-4xl text-center font-bold mb-8 md:text-left lg:text-left mt-20">
         All Products
       </h1>
 
@@ -94,9 +110,9 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="text-sm text-left mb-6 text-gray-600 flex flex-wrap items-center gap-4">
+      <div className="text-sm  mb-6 text-gray-600 flex flex-wrap items-center gap-4">
         <div>
-          Showing: <strong>{selectedCategory}</strong> | Search:{" "}
+          Showing: <strong>{selectedCategory}</strong> | Search:
           <strong>{searchTerm || "none"}</strong>
         </div>
         <button
@@ -109,6 +125,43 @@ const Home = () => {
         >
           Clear Filters
         </button>
+
+        <div className="flex flex-col items-center">
+          <label className="text-sm font-medium">
+            Price: ₹{minPrice.toLocaleString()} – ₹{maxPrice.toLocaleString()}
+          </label>
+          <div className="flex gap-4">
+            <input
+              type="range"
+              min={lowestPrice}
+              max={highestPrice}
+              value={minPrice}
+              step={10}
+              onChange={(e) => {
+                const value = Number(e.target.value);
+                if (value <= maxPrice) {
+                  setMinPrice(value);
+                  setCurrentPage(1);
+                }
+              }}
+            />
+
+            <input
+              type="range"
+              min={lowestPrice}
+              max={highestPrice}
+              value={maxPrice}
+              step={10}
+              onChange={(e) => {
+                const value = Number(e.target.value);
+                if (value >= minPrice) {
+                  setMaxPrice(value);
+                  setCurrentPage(1);
+                }
+              }}
+            />
+          </div>
+        </div>
       </div>
 
       {currentProducts.length > 0 ? (
